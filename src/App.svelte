@@ -89,11 +89,11 @@
     <label>
       Duração:
       <!-- <span> -->
-        <input type="number" bind:value={duration} />
-        <select bind:value={durationType}>
-          <option value="years">Anos</option>
-          <option value="months">Meses</option>
-        </select>
+      <input type="number" bind:value={duration} />
+      <select bind:value={durationType}>
+        <option value="years">Anos</option>
+        <option value="months">Meses</option>
+      </select>
       <!-- </span> -->
     </label>
     <button on:click={calculate}>Calcular</button>
@@ -116,9 +116,24 @@
             on:click={() => (yearData.open = !yearData.open)}
           >
             <td>{yearData.year}</td>
-            <td>{yearData.total.toFixed(2)}</td>
-            <td>{yearData.cumulativeYield.toFixed(2)}</td>
-            <td>{yearData.invested.toFixed(2)}</td>
+            <td
+              >{new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(yearData.total)}</td
+            >
+            <td
+              >{new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(yearData.cumulativeYield)}</td
+            >
+            <td
+              >{new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(yearData.invested)}</td
+            >
           </tr>
           {#if yearData.open}
             <tr>
@@ -138,11 +153,36 @@
                     {#each yearData.months as monthData}
                       <tr>
                         <td>{monthData.month}</td>
-                        <td>{monthData.total.toFixed(2)}</td>
-                        <td>{monthData.monthlyYield.toFixed(2)}</td>
-                        <td>{monthData.annualYieldIfStopped.toFixed(2)}</td>
-                        <td>{monthData.cumulativeYield.toFixed(2)}</td>
-                        <td>{monthData.invested.toFixed(2)}</td>
+                        <td
+                          >{new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(monthData.total)}</td
+                        >
+                        <td
+                          >{new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(monthData.monthlyYield)}</td
+                        >
+                        <td
+                          >{new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(monthData.annualYieldIfStopped)}</td
+                        >
+                        <td
+                          >{new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(monthData.cumulativeYield)}</td
+                        >
+                        <td
+                          >{new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(monthData.invested)}</td
+                        >
                       </tr>
                     {/each}
                   </tbody>
@@ -174,7 +214,8 @@
     /* display: block; */
   }
 
-  th, td {
+  th,
+  td {
     border: 1px solid #e0e0e0;
     padding: 0.75em 1em;
     text-align: right;
@@ -193,7 +234,9 @@
     transition: background-color 0.2s ease-in-out;
   }
 
-  tr.clickable:hover {background-color: coral;}
+  tr.clickable:hover {
+    background-color: coral;
+  }
 
   .clickable {
     cursor: pointer;
@@ -228,7 +271,8 @@
     font-size: 0.95rem;
   }
 
-  input, select {
+  input,
+  select {
     padding: 0.5rem;
     font-size: 1rem;
     border-radius: 6px;
@@ -256,7 +300,7 @@
     background-color: #005fa3;
   }
 
-    @media (max-width: 600px) {
+  @media (max-width: 600px) {
     #container {
       padding: 1rem;
       margin: 1rem;
