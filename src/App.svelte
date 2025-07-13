@@ -170,7 +170,7 @@
     margin-bottom: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    /* overflow-x: auto; */
+    overflow-x: auto;
     /* display: block; */
   }
 
