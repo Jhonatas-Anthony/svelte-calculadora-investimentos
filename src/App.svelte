@@ -5,6 +5,12 @@
   let durationType: "years" | "months" = "years";
   let duration = 5;
 
+  // Regra adicional
+  let ruleType: "" | "fixed-increase" = "";
+  let ruleFrequency: "monthly" | "yearly" = "monthly";
+  let ruleValueType: "percent" | "fixed" = "fixed";
+  let ruleValue = 10;
+
   type MonthData = {
     month: number;
     total: number;
@@ -34,11 +40,26 @@
     let cumulativeYield = 0;
     let year = 1;
     let monthsData: MonthData[] = [];
+    let currentMonthlyInvestment = monthlyInvestment;
 
     for (let i = 1; i <= months; i++) {
+      if (ruleType === "fixed-increase") {
+        const isPeriod =
+          ruleFrequency === "monthly" ? true : i % 12 === 1 && i !== 1;
+
+        if (isPeriod && i !== 1) {
+          if (ruleValueType === "percent") {
+            currentMonthlyInvestment +=
+              currentMonthlyInvestment * (ruleValue / 100);
+          } else {
+            currentMonthlyInvestment += ruleValue;
+          }
+        }
+      }
+
       const monthlyYield = total * monthlyRate;
-      total += monthlyYield + monthlyInvestment;
-      invested += monthlyInvestment;
+      total += monthlyYield + currentMonthlyInvestment;
+      invested += currentMonthlyInvestment;
       cumulativeYield = total - invested;
       const annualYieldIfStopped = (total * annualRate) / 100;
 
@@ -63,6 +84,13 @@
         monthsData = [];
       }
     }
+  }
+
+  function clearRules() {
+    ruleType = "";
+    ruleFrequency = "monthly";
+    ruleValueType = "fixed";
+    ruleValue = 0;
   }
 </script>
 
@@ -96,8 +124,52 @@
       </select>
       <!-- </span> -->
     </label>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <label>
+        Adicionar Regra:
+        <select bind:value={ruleType}>
+          <option value="">Nenhuma</option>
+          <option value="fixed-increase">
+            Aumentar investimento mensal
+          </option>
+        </select>
+      </label>
+
+      {#if ruleType === "fixed-increase"}
+        <div>
+          <label>
+            Frequência:
+            <select bind:value={ruleFrequency}>
+              <option value="monthly">Todo mês</option>
+              <option value="yearly">Todo ano</option>
+            </select>
+          </label>
+
+          <label>
+            Tipo de aumento:
+            <select bind:value={ruleValueType}>
+              <option value="percent">Porcentagem (%)</option>
+              <option value="fixed">Valor fixo</option>
+            </select>
+          </label>
+
+          <label>
+            Valor do aumento:
+            <input type="number" bind:value={ruleValue} />
+          </label>
+
+          <button on:click={clearRules} style="margin-top: 0.5rem;" id="clear">
+            Limpar Regras
+          </button>
+        </div>
+      {/if}
+    </div>
+
     <button on:click={calculate}>Calcular</button>
   </div>
+
+  <hr />
 
   {#if result.length}
     <table>
@@ -294,10 +366,18 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    margin: 0.5rem 0;
   }
 
   button:hover {
     background-color: #005fa3;
+  }
+
+  #clear {
+    background-color: #f5f7fa;
+    color: #cc0000;
+    border: 1px solid #cc0000;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   }
 
   @media (max-width: 600px) {
